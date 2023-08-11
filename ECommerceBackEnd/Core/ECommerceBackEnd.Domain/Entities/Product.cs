@@ -1,4 +1,5 @@
-﻿using ECommerceBackEnd.Domain.Entities.Common;
+﻿
+using ECommerceBackEnd.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace ECommerceBackEnd.Domain.Entities
     {
         public string Name { get; set; }
         public int Stock { get; set; }
-        public long Price { get; set; }
+        public decimal Price { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

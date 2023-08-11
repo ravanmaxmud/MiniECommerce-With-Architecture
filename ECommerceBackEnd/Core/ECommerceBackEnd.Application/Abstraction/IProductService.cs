@@ -9,6 +9,5 @@ namespace ECommerceBackEnd.Application.Abstraction
 {
     public interface IProductService
     {
-        List<Product> GetProducts();
     }
 }
