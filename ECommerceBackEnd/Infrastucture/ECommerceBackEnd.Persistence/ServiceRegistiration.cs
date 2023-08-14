@@ -1,5 +1,6 @@
-﻿using ECommerceBackEnd.Application.Abstraction;
+﻿using ECommerceBackEnd.Application.Repositories;
 using ECommerceBackEnd.Persistence.Contexts;
+using ECommerceBackEnd.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,20 @@ namespace ECommerceBackEnd.Persistence
         public static void AddPersistenceService(this IServiceCollection services) 
         {
             services.AddDbContext<ECommerceDBContext>(options => 
-            options.UseNpgsql(Configurations.ConnectionString));
+            options.UseNpgsql(Configurations.ConnectionString),ServiceLifetime.Singleton);
+
+
+            services.AddSingleton<ICustomerReadRepository,CustomerReadRepository>();
+            services.AddSingleton<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddSingleton<IOrderReadRepository, OrderReadRepository>();
+            services.AddSingleton<IOrderWriteRepository, OrderWriteRepository>();
+            services.AddSingleton<IProductReadRepository, ProductReadRepository>();
+            services.AddSingleton<IProductWriteRepository, ProductWriteRepository>();
+
+
+
+
+
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerceBackEnd.Application.Abstraction
+namespace ECommerceBackEnd.Application.Repositories
 {
-    public interface IProductService
+    public interface ICustomerReadRepository : IReadRepository<Customer>
     {
     }
 }
