@@ -12,16 +12,25 @@ namespace ECommerceBackEnd.API.Controllers
         readonly private IProductWriteRepository _productWriteRepository;
         readonly private IProductReadRepository _productReadRepository;
 
-        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository)
+        private readonly IOrderWriteRepository _orderWriteRepository;
+        private readonly ICustomerWriteRepository _customerWriteRepository;
+
+        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
+            _orderWriteRepository = orderWriteRepository;
+            _customerWriteRepository = customerWriteRepository;
         }
 
         [HttpGet("GetProducts")]
         public async Task Get()
         {
-          
+            var customerId = Guid.NewGuid();
+            _customerWriteRepository.AddAsync(new() { Id = customerId,Name = "REVAN"});
+            _customerWriteRepository.SaveAsync();
+            _orderWriteRepository.AddAsync(new Order { Address = "Baki",CustomerId = customerId});
+            _orderWriteRepository.SaveAsync();
         }
 
         [HttpGet("{id}")]
