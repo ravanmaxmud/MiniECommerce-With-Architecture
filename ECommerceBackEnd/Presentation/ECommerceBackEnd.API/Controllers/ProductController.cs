@@ -28,7 +28,6 @@ namespace ECommerceBackEnd.API.Controllers
         {
             var customerId = Guid.NewGuid();
             _customerWriteRepository.AddAsync(new() { Id = customerId,Name = "REVAN"});
-            _customerWriteRepository.SaveAsync();
             _orderWriteRepository.AddAsync(new Order { Address = "Baki",CustomerId = customerId});
             _orderWriteRepository.SaveAsync();
         }
