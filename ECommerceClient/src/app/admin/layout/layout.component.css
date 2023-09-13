@@ -1,0 +1,11 @@
+.admin-container {
+  width: 99%;
+  height: 780px;
+  margin: 10px;
+  border: 1px solid #555;
+}
+
+.admin-sidebar {
+  width: -moz-max-content;
+  width: max-content;
+}/*# sourceMappingURL=layout.component.css.map */
