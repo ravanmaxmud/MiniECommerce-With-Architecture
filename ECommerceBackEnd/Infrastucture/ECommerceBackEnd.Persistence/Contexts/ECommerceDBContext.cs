@@ -19,7 +19,8 @@ namespace ECommerceBackEnd.Persistence.Contexts
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-                
+               //ChangeTacker entityler uzerinde edilen deyisikleri ve ya
+               //yeni elave edilen datanin yakalnmasini (tutulmasini) saglayan bir propertydir.
             var datas = ChangeTracker.Entries<BaseEntity>();
             foreach (var data in datas)
             {

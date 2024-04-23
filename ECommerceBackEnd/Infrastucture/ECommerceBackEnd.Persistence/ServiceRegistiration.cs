@@ -15,6 +15,7 @@ namespace ECommerceBackEnd.Persistence
 {
     public static class ServiceRegistiration
     {
+        
         public static void AddPersistenceService(this IServiceCollection services) 
         {
             services.AddDbContext<ECommerceDBContext>(options => 

@@ -12,7 +12,7 @@ namespace ECommerceBackEnd.Persistence
         public static string ConnectionString 
         {
             get
-            {
+            {   //Presentation katmaninda olan API proyektinden json file-indan connection stringi goturmek ucundur.
                 ConfigurationManager configurationManager = new();
                 configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ECommerceBackEnd.API"));
                 configurationManager.AddJsonFile("appsettings.json");

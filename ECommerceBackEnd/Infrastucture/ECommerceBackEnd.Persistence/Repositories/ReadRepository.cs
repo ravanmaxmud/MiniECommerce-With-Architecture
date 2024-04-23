@@ -20,7 +20,9 @@ namespace ECommerceBackEnd.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public DbSet<T> Table => _dbContext.Set<T>();
+        public DbSet<T> Table => _dbContext.Set<T>(); //ORM icinde Gelen set methodu
+                                                      //T entity tipinde bir veri qebul edir
+
 
         public IQueryable<T> GetAll(bool tracking = true)
         {
@@ -33,6 +35,8 @@ namespace ECommerceBackEnd.Persistence.Repositories
 
         public IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true)
         {
+
+           
           var query = Table.Where(method);
             if(!tracking)
                 query = query.AsNoTracking();
@@ -53,6 +57,7 @@ namespace ECommerceBackEnd.Persistence.Repositories
                if(!tracking)
                    query = query.AsNoTracking();
             return await query.FirstOrDefaultAsync(data=> data.Id == Guid.Parse(id));
+            // IQuerble isleyirikse Find Methodundan istifade ede bilmirik buna gore de FirstOrDefaultdan istifade edirik
         }
     }
 

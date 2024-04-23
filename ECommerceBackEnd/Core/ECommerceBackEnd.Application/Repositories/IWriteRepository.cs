@@ -17,5 +17,7 @@ namespace ECommerceBackEnd.Application.Repositories
         bool UpdateAsync(T model);
         Task<int> SaveAsync();
 
+        //Bunlarin Concreate leri ise Persistance katmanindaki Repositoryies folderinde yazilir
+
     }
 }
