@@ -1,4 +1,9 @@
+using ECommerceBackEnd.Application.Validators.Products;
+using ECommerceBackEnd.Domain.Entities.Common;
+using ECommerceBackEnd.Infrastucture.Filters;
 using ECommerceBackEnd.Persistence;
+using FluentValidation.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceService();
@@ -8,7 +13,11 @@ builder.Services.AddCors(options=> options.AddDefaultPolicy(policy =>
     //==> bele yazaraqda istediyimiz urllerden sorgulari qebul ede bilerik
     //ancaq yuxarida yazilan ise her yerden gelen sorgunu qebul edir
 ));
-builder.Services.AddControllers();
+
+builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+              .AddFluentValidation(configuration => 
+              configuration.RegisterValidatorsFromAssemblyContaining<AddProductValidator>())
+              .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
