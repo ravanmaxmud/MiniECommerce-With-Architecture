@@ -1,4 +1,6 @@
-﻿using ECommerceBackEnd.Application.Repositories;
+﻿using ECommerceBackEnd.Application.Contracts;
+using ECommerceBackEnd.Application.Repositories;
+using ECommerceBackEnd.Application.Services;
 using ECommerceBackEnd.Application.ViewModels.Product;
 using ECommerceBackEnd.Application.ViewModels.Products;
 using ECommerceBackEnd.Domain.Entities;
@@ -15,11 +17,13 @@ namespace ECommerceBackEnd.API.Controllers
     {
         readonly private IProductWriteRepository _productWriteRepository;
         readonly private IProductReadRepository _productReadRepository;
+        readonly IFileService _fileService;
 
-        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository)
+        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileService fileService)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -32,21 +36,21 @@ namespace ECommerceBackEnd.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            return Ok(await _productReadRepository.GetByIdAsync(id,false));
+            return Ok(await _productReadRepository.GetByIdAsync(id, false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ProductAddViewModel model) 
+        public async Task<IActionResult> Post(ProductAddViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var product = new Product 
+            var product = new Product
             {
-              Name = model.Name,
-              Stock = model.Stock,
-              Price = model.Price
+                Name = model.Name,
+                Stock = model.Stock,
+                Price = model.Price
             };
             await _productWriteRepository.AddAsync(product);
             await _productWriteRepository.SaveAsync();
@@ -54,9 +58,9 @@ namespace ECommerceBackEnd.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(ProductsUpdateViewModel model) 
+        public async Task<IActionResult> Put(ProductsUpdateViewModel model)
         {
-          Product product = await _productReadRepository.GetByIdAsync(model.Id);
+            Product product = await _productReadRepository.GetByIdAsync(model.Id);
             product.Stock = model.Stock;
             product.Name = model.Name;
             product.Price = model.Price;
@@ -65,11 +69,18 @@ namespace ECommerceBackEnd.API.Controllers
             return Ok();
         }
         [HttpDelete]
-        public async Task<IActionResult> Delete(string id) 
+        public async Task<IActionResult> Delete(string id)
         {
             await _productWriteRepository.DeleteAsync(id);
             await _productWriteRepository.SaveAsync();
             return Ok();
         }
+
+        [HttpPost("[action]")]  
+        public async Task<IActionResult> Upload(IFormFile file) 
+        {
+           return Ok(await _fileService.UploadAsync(file, UploadDirectory.Products));
+        }
+
     }
 }

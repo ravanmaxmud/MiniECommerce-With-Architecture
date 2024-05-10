@@ -20,4 +20,8 @@
     <ProjectReference Include="..\..\Infrastucture\ECommerceBackEnd.Persistence\ECommerceBackEnd.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\custom-files\" />
+  </ItemGroup>
+
 </Project>

@@ -35,8 +35,6 @@ namespace ECommerceBackEnd.Persistence.Repositories
 
         public IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true)
         {
-
-           
           var query = Table.Where(method);
             if(!tracking)
                 query = query.AsNoTracking();

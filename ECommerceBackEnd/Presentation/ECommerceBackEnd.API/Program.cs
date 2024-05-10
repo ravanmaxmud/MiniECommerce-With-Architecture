@@ -1,11 +1,13 @@
 using ECommerceBackEnd.Application.Validators.Products;
 using ECommerceBackEnd.Domain.Entities.Common;
+using ECommerceBackEnd.Infrastucture;
 using ECommerceBackEnd.Infrastucture.Filters;
 using ECommerceBackEnd.Persistence;
 using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddInfrastuructureServices();
 builder.Services.AddPersistenceService();
 builder.Services.AddCors(options=> options.AddDefaultPolicy(policy => 
     policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
@@ -17,7 +19,9 @@ builder.Services.AddCors(options=> options.AddDefaultPolicy(policy =>
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
               .AddFluentValidation(configuration => 
               configuration.RegisterValidatorsFromAssemblyContaining<AddProductValidator>())
-              .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);  
+              .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true); //Fluent Validation ucun
+                                                                                                       //lazim olan bir configurationdur. 
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();
 

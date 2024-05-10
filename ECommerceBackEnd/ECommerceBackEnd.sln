@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{55EE3171-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceBackEnd.Domain", "Core\ECommerceBackEnd.Domain\ECommerceBackEnd.Domain.csproj", "{CE4E2912-5C49-483E-883F-E26F50E0F063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceBackEnd.Application", "Core\ECommerceBackEnd.Application\ECommerceBackEnd.Application.csproj", "{F727777D-CF3D-4EEB-89B4-C5B445405415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceBackEnd.Application", "Core\ECommerceBackEnd.Application\ECommerceBackEnd.Application.csproj", "{F727777D-CF3D-4EEB-89B4-C5B445405415}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastucture", "Infrastucture", "{18D660C5-057E-4AE5-AF58-67D96C9A2F2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceBackEnd.Infrastucture", "Infrastucture\ECommerceBackEnd.Infrastucture\ECommerceBackEnd.Infrastucture.csproj", "{1C0E124C-9FE5-471D-80C1-75EB5F375337}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceBackEnd.Infrastucture", "Infrastucture\ECommerceBackEnd.Infrastucture\ECommerceBackEnd.Infrastucture.csproj", "{1C0E124C-9FE5-471D-80C1-75EB5F375337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceBackEnd.Persistence", "Infrastucture\ECommerceBackEnd.Persistence\ECommerceBackEnd.Persistence.csproj", "{38E68BC6-526C-4C52-94BC-C2D8BFB8154B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceBackEnd.Persistence", "Infrastucture\ECommerceBackEnd.Persistence\ECommerceBackEnd.Persistence.csproj", "{38E68BC6-526C-4C52-94BC-C2D8BFB8154B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{BE21B209-D43C-4A9F-83A1-0AB561422C39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceBackEnd.API", "Presentation\ECommerceBackEnd.API\ECommerceBackEnd.API.csproj", "{AA1D1BF7-0EA7-4285-BEF9-7D0CA6CEA015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceBackEnd.API", "Presentation\ECommerceBackEnd.API\ECommerceBackEnd.API.csproj", "{AA1D1BF7-0EA7-4285-BEF9-7D0CA6CEA015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
