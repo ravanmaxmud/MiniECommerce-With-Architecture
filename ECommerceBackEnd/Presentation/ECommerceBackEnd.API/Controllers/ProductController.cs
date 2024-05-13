@@ -18,12 +18,20 @@ namespace ECommerceBackEnd.API.Controllers
         readonly private IProductWriteRepository _productWriteRepository;
         readonly private IProductReadRepository _productReadRepository;
         readonly IFileService _fileService;
+        readonly IFileReadRepository _fileReadRepository;
+        readonly IFIleWriteRepository _fIleWriteRepository;
+        readonly IProductImageReadRepository _productImageReadRepository;
+        readonly IProductImageWriteRepository _productImageWriteRepository;
 
-        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileService fileService)
+        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileService fileService, IFileReadRepository fileReadRepository, IFIleWriteRepository fIleWriteRepository, IProductImageReadRepository productImageReadRepository, IProductImageWriteRepository productImageWriteRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
             _fileService = fileService;
+            _fileReadRepository = fileReadRepository;
+            _fIleWriteRepository = fIleWriteRepository;
+            _productImageReadRepository = productImageReadRepository;
+            _productImageWriteRepository = productImageWriteRepository;
         }
 
         [HttpGet]
@@ -40,7 +48,7 @@ namespace ECommerceBackEnd.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ProductAddViewModel model)
+        public async Task<IActionResult> Post([FromForm]ProductAddViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -50,9 +58,23 @@ namespace ECommerceBackEnd.API.Controllers
             {
                 Name = model.Name,
                 Stock = model.Stock,
-                Price = model.Price
+                Price = model.Price,               
             };
             await _productWriteRepository.AddAsync(product);
+
+
+            foreach (var productImg in model.file)
+            {
+                var imageNameSystem = await _fileService.UploadAsync(productImg, UploadDirectory.Products);
+                var productImage = new ProductImageFile()
+                {
+                    FileName = product.Name,
+                    Path = imageNameSystem,
+                    Product = product,
+                };
+                await _productImageWriteRepository.AddAsync(productImage);
+            }
+         
             await _productWriteRepository.SaveAsync();
             return StatusCode((int)HttpStatusCode.Created);
         }
@@ -79,7 +101,16 @@ namespace ECommerceBackEnd.API.Controllers
         [HttpPost("[action]")]  
         public async Task<IActionResult> Upload(IFormFile file) 
         {
-           return Ok(await _fileService.UploadAsync(file, UploadDirectory.Products));
+           var imageNameSystem =  await _fileService.UploadAsync(file, UploadDirectory.Products);
+            //_productImageWriteRepository.AddRangeAsync();
+
+           return Ok();
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> RemoveFile(string fileName)
+        {
+            await _fileService.DeleteAsync(fileName, UploadDirectory.Products);
+            return Ok();
         }
 
     }

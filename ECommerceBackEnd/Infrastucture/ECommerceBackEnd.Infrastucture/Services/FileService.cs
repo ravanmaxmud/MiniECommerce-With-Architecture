@@ -1,14 +1,7 @@
 ﻿using ECommerceBackEnd.Application.Contracts;
 using ECommerceBackEnd.Application.Services;
-using ECommerceBackEnd.Infrastucture.StaticServices;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceBackEnd.Infrastucture.Services
 {
@@ -21,7 +14,7 @@ namespace ECommerceBackEnd.Infrastucture.Services
             _logger = logger;
         }
 
-        public async Task<UploadResult> UploadAsync(IFormFile formFile, UploadDirectory uploadDirectory)
+        public async Task<List<string>> UploadAsync(IFormFile formFile, UploadDirectory uploadDirectory)
         {
             string directoryPath = GetUploadDirectory(uploadDirectory);
 
@@ -35,14 +28,15 @@ namespace ECommerceBackEnd.Infrastucture.Services
             {
                 using FileStream fileStream = new FileStream(filePath, FileMode.Create);
                 await formFile.CopyToAsync(fileStream);
+                List<string> uploadedFiles = new List<string>();
+                uploadedFiles.Add(imageNameInFileSystem);
+                return uploadedFiles;
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Some Things Went Wrong");
                 throw;
             }
-            return new UploadResult {ImageName = imageNameInFileSystem , FilePath = filePath};
-            
         }
         public async Task DeleteAsync(string? fileName, UploadDirectory uploadDirectory)
         {
@@ -63,11 +57,7 @@ namespace ECommerceBackEnd.Infrastucture.Services
             }
         }
 
-    
-        
-
-
-
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private string GetUploadDirectory(UploadDirectory uploadDirectory) 
         {
             string startPath = Path.Combine("wwwroot","custom-files");

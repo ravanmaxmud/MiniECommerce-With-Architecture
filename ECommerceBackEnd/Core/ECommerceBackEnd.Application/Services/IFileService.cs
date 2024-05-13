@@ -10,7 +10,7 @@ namespace ECommerceBackEnd.Application.Services
 {
     public interface IFileService       
     {
-        Task<UploadResult> UploadAsync(IFormFile formFile , UploadDirectory uploadDirectory);
+        Task<string> UploadAsync(IFormFile formFile , UploadDirectory uploadDirectory);
         string GetFileUrl(string? fileName, UploadDirectory uploadDirectory);
         Task DeleteAsync(string? fileName , UploadDirectory uploadDirectory);
 
