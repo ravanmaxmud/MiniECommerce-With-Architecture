@@ -14,7 +14,39 @@ namespace ECommerceBackEnd.Infrastucture.Services
             _logger = logger;
         }
 
-        public async Task<List<string>> UploadAsync(IFormFile formFile, UploadDirectory uploadDirectory)
+
+
+        public async Task<List<string>> UploadRangeAsync(List<IFormFile> formFiles, UploadDirectory uploadDirectory)
+        {
+            string directoryPath = GetUploadDirectory(uploadDirectory);
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            var imageNamesInFileSystem = GenerateUniqueFileNames(formFiles.Select(p => p.FileName).ToList());
+            var filePaths = imageNamesInFileSystem.Select(imageName => Path.Combine(directoryPath,imageName));
+
+            try
+            {
+                foreach (var filePath in filePaths) 
+                {
+                  using FileStream fileStream = new FileStream(filePath, FileMode.Create);
+
+                    await Task.Run(()=> 
+                    {
+                        formFiles.Select(f => f.CopyToAsync(fileStream));
+                    });
+                }
+              
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Some Things Went Wrong");
+                throw;
+            }
+            return imageNamesInFileSystem;
+        }
+
+        public async Task<string> UploadAsync(IFormFile formFile, UploadDirectory uploadDirectory)
         {
             string directoryPath = GetUploadDirectory(uploadDirectory);
 
@@ -28,15 +60,14 @@ namespace ECommerceBackEnd.Infrastucture.Services
             {
                 using FileStream fileStream = new FileStream(filePath, FileMode.Create);
                 await formFile.CopyToAsync(fileStream);
-                List<string> uploadedFiles = new List<string>();
-                uploadedFiles.Add(imageNameInFileSystem);
-                return uploadedFiles;
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Some Things Went Wrong");
                 throw;
             }
+            return imageNameInFileSystem;
+            
         }
         public async Task DeleteAsync(string? fileName, UploadDirectory uploadDirectory)
         {
@@ -74,5 +105,17 @@ namespace ECommerceBackEnd.Infrastucture.Services
         {
             return $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
         }
+
+        private  List<string> GenerateUniqueFileNames(List<string> fileNames)
+        {
+            List<string> result = new List<string>();
+            foreach (string fileName in fileNames) 
+            {
+                result.Add($"{Guid.NewGuid()}{Path.GetExtension(fileName)}");
+            }
+            return result;
+        }
+
+
     }
 }

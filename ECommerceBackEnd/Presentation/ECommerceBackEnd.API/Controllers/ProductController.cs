@@ -61,20 +61,17 @@ namespace ECommerceBackEnd.API.Controllers
                 Price = model.Price,               
             };
             await _productWriteRepository.AddAsync(product);
+            var imageNamesSystem = await _fileService.UploadRangeAsync(model.file!, UploadDirectory.Products);
 
 
-            foreach (var productImg in model.file)
+
+            var productImgs = await _productImageWriteRepository.AddRangeAsync(imageNamesSystem.Select(imageNameSystem => new ProductImageFile()
             {
-                var imageNameSystem = await _fileService.UploadAsync(productImg, UploadDirectory.Products);
-                var productImage = new ProductImageFile()
-                {
-                    FileName = product.Name,
-                    Path = imageNameSystem,
-                    Product = product,
-                };
-                await _productImageWriteRepository.AddAsync(productImage);
-            }
-         
+
+                FileName = model.file!.FirstOrDefault()!.FileName,
+                Path = imageNameSystem,
+                Product = product,
+            }).ToList());
             await _productWriteRepository.SaveAsync();
             return StatusCode((int)HttpStatusCode.Created);
         }

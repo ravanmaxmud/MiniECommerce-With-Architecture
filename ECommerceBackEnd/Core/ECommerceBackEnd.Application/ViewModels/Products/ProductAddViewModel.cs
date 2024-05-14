@@ -12,6 +12,6 @@ namespace ECommerceBackEnd.Application.ViewModels.Product
         public  string Name { get; set; }
         public int Stock { get; set; }
         public decimal Price { get; set; }
-        public List<IFormFile> file { get; set; }
+        public List<IFormFile>? file { get; set; }
     }
 }
