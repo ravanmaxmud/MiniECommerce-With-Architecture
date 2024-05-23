@@ -12,6 +12,7 @@ namespace ECommerceBackEnd.Domain.Entities
     {
         public string FileName { get; set; }
         public string Path { get; set; }
+        public string Storage { get; set; }
 
 
         [NotMapped]

@@ -1,9 +1,11 @@
-﻿using ECommerceBackEnd.Application.Contracts;
+﻿using ECommerceBackEnd.Application.Abstractions.Storage;
+using ECommerceBackEnd.Application.Contracts;
 using ECommerceBackEnd.Application.Repositories;
 using ECommerceBackEnd.Application.Services;
 using ECommerceBackEnd.Application.ViewModels.Product;
 using ECommerceBackEnd.Application.ViewModels.Products;
 using ECommerceBackEnd.Domain.Entities;
+using ECommerceBackEnd.Infrastucture.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -17,21 +19,24 @@ namespace ECommerceBackEnd.API.Controllers
     {
         readonly private IProductWriteRepository _productWriteRepository;
         readonly private IProductReadRepository _productReadRepository;
-        readonly IFileService _fileService;
+     
         readonly IFileReadRepository _fileReadRepository;
         readonly IFIleWriteRepository _fIleWriteRepository;
         readonly IProductImageReadRepository _productImageReadRepository;
         readonly IProductImageWriteRepository _productImageWriteRepository;
 
-        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileService fileService, IFileReadRepository fileReadRepository, IFIleWriteRepository fIleWriteRepository, IProductImageReadRepository productImageReadRepository, IProductImageWriteRepository productImageWriteRepository)
+        readonly IStorageService _storageService;
+
+        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileReadRepository fileReadRepository, IFIleWriteRepository fIleWriteRepository, IProductImageReadRepository productImageReadRepository, IProductImageWriteRepository productImageWriteRepository, IStorageService storageService)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
-            _fileService = fileService;
+
             _fileReadRepository = fileReadRepository;
             _fIleWriteRepository = fIleWriteRepository;
             _productImageReadRepository = productImageReadRepository;
             _productImageWriteRepository = productImageWriteRepository;
+            _storageService = storageService;
         }
 
         [HttpGet]
@@ -61,17 +66,16 @@ namespace ECommerceBackEnd.API.Controllers
                 Price = model.Price,               
             };
             await _productWriteRepository.AddAsync(product);
-            var imageNamesSystem = await _fileService.UploadRangeAsync(model.file!, UploadDirectory.Products);
-
-
-
+            var imageNamesSystem = await _storageService.UploadRangeAsync(model.file!, UploadDirectory.Products);
             var productImgs = await _productImageWriteRepository.AddRangeAsync(imageNamesSystem.Select(imageNameSystem => new ProductImageFile()
             {
 
                 FileName = model.file!.FirstOrDefault()!.FileName,
                 Path = imageNameSystem,
                 Product = product,
+                Storage = _storageService.StorageName,
             }).ToList());
+
             await _productWriteRepository.SaveAsync();
             return StatusCode((int)HttpStatusCode.Created);
         }
@@ -98,7 +102,7 @@ namespace ECommerceBackEnd.API.Controllers
         [HttpPost("[action]")]  
         public async Task<IActionResult> Upload(IFormFile file) 
         {
-           var imageNameSystem =  await _fileService.UploadAsync(file, UploadDirectory.Products);
+           var imageNameSystem =  await _storageService.UploadAsync(file, UploadDirectory.Products);
             //_productImageWriteRepository.AddRangeAsync();
 
            return Ok();
@@ -106,7 +110,7 @@ namespace ECommerceBackEnd.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveFile(string fileName)
         {
-            await _fileService.DeleteAsync(fileName, UploadDirectory.Products);
+            await _storageService.DeleteAsync(fileName, UploadDirectory.Products);
             return Ok();
         }
 

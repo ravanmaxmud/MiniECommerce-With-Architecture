@@ -2,6 +2,7 @@ using ECommerceBackEnd.Application.Validators.Products;
 using ECommerceBackEnd.Domain.Entities.Common;
 using ECommerceBackEnd.Infrastucture;
 using ECommerceBackEnd.Infrastucture.Filters;
+using ECommerceBackEnd.Infrastucture.Services.Storage.Local;
 using ECommerceBackEnd.Persistence;
 using FluentValidation.AspNetCore;
 
@@ -9,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastuructureServices();
 builder.Services.AddPersistenceService();
+
+//builder.Services.AddStorage(StorageType.Azure);
+builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddCors(options=> options.AddDefaultPolicy(policy => 
     policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
     //.WithOrigns("custom link http//localhost:4200,https//localhost:4200")
