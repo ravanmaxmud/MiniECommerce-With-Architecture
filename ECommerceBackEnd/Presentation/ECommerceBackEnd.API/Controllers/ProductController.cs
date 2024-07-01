@@ -1,11 +1,13 @@
 ﻿using ECommerceBackEnd.Application.Abstractions.Storage;
 using ECommerceBackEnd.Application.Contracts;
+using ECommerceBackEnd.Application.Features.Queries.GetAllProduct;
 using ECommerceBackEnd.Application.Repositories;
 using ECommerceBackEnd.Application.Services;
 using ECommerceBackEnd.Application.ViewModels.Product;
 using ECommerceBackEnd.Application.ViewModels.Products;
 using ECommerceBackEnd.Domain.Entities;
 using ECommerceBackEnd.Infrastucture.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -27,7 +29,13 @@ namespace ECommerceBackEnd.API.Controllers
 
         readonly IStorageService _storageService;
 
-        public ProductController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileReadRepository fileReadRepository, IFIleWriteRepository fIleWriteRepository, IProductImageReadRepository productImageReadRepository, IProductImageWriteRepository productImageWriteRepository, IStorageService storageService)
+        readonly IMediator _mediator;
+
+        public ProductController(IProductWriteRepository productWriteRepository, 
+            IProductReadRepository productReadRepository, IFileReadRepository fileReadRepository, 
+            IFIleWriteRepository fIleWriteRepository, IProductImageReadRepository productImageReadRepository, 
+            IProductImageWriteRepository productImageWriteRepository,
+            IStorageService storageService, IMediator mediator)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -37,6 +45,7 @@ namespace ECommerceBackEnd.API.Controllers
             _productImageReadRepository = productImageReadRepository;
             _productImageWriteRepository = productImageWriteRepository;
             _storageService = storageService;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -49,7 +58,9 @@ namespace ECommerceBackEnd.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            return Ok(await _productReadRepository.GetByIdAsync(id, false));
+            var request = new GetAllProductQueryRequest { Id = id };
+            GetAllProductQueryResponse response = await _mediator.Send(request);
+            return Ok(response);
         }
 
         [HttpPost]

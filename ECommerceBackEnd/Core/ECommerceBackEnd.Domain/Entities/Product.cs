@@ -14,6 +14,6 @@ namespace ECommerceBackEnd.Domain.Entities
         public int Stock { get; set; }
         public decimal Price { get; set; }
         public ICollection<Order> Orders { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public ICollection<ProductImageFile> ProductImages { get; set; }
     }
 }

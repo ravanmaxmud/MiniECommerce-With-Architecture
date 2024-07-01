@@ -1,3 +1,4 @@
+using ECommerceBackEnd.Application;
 using ECommerceBackEnd.Application.Validators.Products;
 using ECommerceBackEnd.Domain.Entities.Common;
 using ECommerceBackEnd.Infrastucture;
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastuructureServices();
 builder.Services.AddPersistenceService();
+builder.Services.AddAplicationServices();
 
 //builder.Services.AddStorage(StorageType.Azure);
 builder.Services.AddStorage<LocalStorage>();
